@@ -9,27 +9,26 @@
             background-color: #f4f4f4;
             padding: 20px;
         }
+
         .container {
             max-width: 800px;
             background: white;
             padding: 20px;
             border-radius: 8px;
+            margin: auto;
         }
-        button {
-            margin: 5px;
-            padding: 8px 12px;
-            cursor: pointer;
+
+        button, select {
+            margin: 6px 0;
+            padding: 6px 10px;
         }
-        input {
-            padding: 6px;
-            margin-top: 5px;
-        }
+
         #output {
             margin-top: 20px;
-            white-space: pre-line;
             background: #eee;
             padding: 10px;
             border-radius: 6px;
+            white-space: pre-line;
         }
     </style>
 </head>
@@ -38,10 +37,16 @@
 <div class="container">
     <h1>Illinois County Soil Statistics</h1>
 
-    <p>Select an option:</p>
+    <h3>County Statistics</h3>
+    <select id="countySelect">
+        <option value="">-- Select a County --</option>
+    </select>
+    <br>
+    <button onclick="showCounty()">Show County Data</button>
 
-    <button onclick="bestCounty()">Best Average County</button><br>
+    <hr>
 
+    <h3>Comparisons</h3>
     <button onclick="findMin('pH')">Lowest pH</button>
     <button onclick="findMax('pH')">Highest pH</button><br>
 
@@ -51,9 +56,9 @@
     <button onclick="findMin('Clay')">Lowest Clay</button>
     <button onclick="findMax('Clay')">Highest Clay</button><br>
 
-    <h3>Specific County</h3>
-    <input id="countyInput" placeholder="Enter county name">
-    <button onclick="findCounty()">Search</button>
+    <hr>
+
+    <button onclick="bestCounty()">Best Average County</button>
 
     <div id="output"></div>
 </div>
@@ -90,29 +95,30 @@ const data = [
     { county: "Cumberland", pH: 5.70, Clay: 17.20, OM: 2.95 }
 ];
 
+// Populate dropdown
+const select = document.getElementById("countySelect");
+data.forEach(c => {
+    const option = document.createElement("option");
+    option.value = c.county;
+    option.textContent = c.county;
+    select.appendChild(option);
+});
+
 const output = document.getElementById("output");
 
-function bestCounty() {
-    output.textContent =
-        "Although McLean County has the best soil\n" +
-        "We only have data for the second best county\n" +
-        "DeKalb pH: 6.20, Clay: 17.20, OM: 3.90";
-}
-
-function findCounty() {
-    const name = document.getElementById("countyInput").value.trim().toLowerCase();
-    const county = data.find(c => c.county.toLowerCase() === name);
-
-    if (!county) {
-        output.textContent = "County not found.";
+function showCounty() {
+    const name = select.value;
+    if (!name) {
+        output.textContent = "Please select a county.";
         return;
     }
 
+    const c = data.find(x => x.county === name);
     output.textContent =
-        `${county.county}\n` +
-        `pH: ${county.pH}\n` +
-        `Clay: ${county.Clay}\n` +
-        `OM: ${county.OM}`;
+        `${c.county}\n` +
+        `pH: ${c.pH}\n` +
+        `Clay: ${c.Clay}%\n` +
+        `OM: ${c.OM}%`;
 }
 
 function findMin(stat) {
@@ -131,6 +137,13 @@ function findMax(stat) {
     });
     output.textContent =
         `${max.county} County has the highest ${stat}: ${max[stat]}`;
+}
+
+function bestCounty() {
+    output.textContent =
+        "Although McLean County has the best soil\n" +
+        "We only have data for the second best county\n" +
+        "DeKalb pH: 6.20, Clay: 17.20, OM: 3.90";
 }
 </script>
 
