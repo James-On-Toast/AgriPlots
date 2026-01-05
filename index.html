@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Illinois Soil Data</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        button {
+            margin: 5px;
+            padding: 8px 12px;
+            cursor: pointer;
+        }
+        input {
+            padding: 6px;
+            margin-top: 5px;
+        }
+        #output {
+            margin-top: 20px;
+            white-space: pre-line;
+            background: #eee;
+            padding: 10px;
+            border-radius: 6px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Illinois County Soil Statistics</h1>
+
+    <p>Select an option:</p>
+
+    <button onclick="bestCounty()">Best Average County</button><br>
+
+    <button onclick="findMin('pH')">Lowest pH</button>
+    <button onclick="findMax('pH')">Highest pH</button><br>
+
+    <button onclick="findMin('OM')">Lowest OM</button>
+    <button onclick="findMax('OM')">Highest OM</button><br>
+
+    <button onclick="findMin('Clay')">Lowest Clay</button>
+    <button onclick="findMax('Clay')">Highest Clay</button><br>
+
+    <h3>Specific County</h3>
+    <input id="countyInput" placeholder="Enter county name">
+    <button onclick="findCounty()">Search</button>
+
+    <div id="output"></div>
+</div>
+
+<script>
+const data = [
+    { county: "Jo Daviess", pH: 6.75, Clay: 14.05, OM: 3.90 },
+    { county: "Stephenson", pH: 6.75, Clay: 14.05, OM: 3.90 },
+    { county: "Lake", pH: 6.75, Clay: 17.20, OM: 6.60 },
+    { county: "McHenry", pH: 6.75, Clay: 17.20, OM: 6.60 },
+    { county: "Boone", pH: 6.75, Clay: 14.05, OM: 3.90 },
+    { county: "Winnebago", pH: 6.75, Clay: 14.05, OM: 3.90 },
+    { county: "Carroll", pH: 6.20, Clay: 14.05, OM: 2.95 },
+    { county: "Ogle", pH: 6.20, Clay: 14.05, OM: 2.95 },
+    { county: "DeKalb", pH: 6.20, Clay: 17.20, OM: 3.90 },
+    { county: "Kendall", pH: 6.20, Clay: 17.20, OM: 3.90 },
+    { county: "Marshall", pH: 6.20, Clay: 17.20, OM: 2.95 },
+    { county: "Henderson", pH: 6.20, Clay: 14.05, OM: 2.20 },
+    { county: "McDonough", pH: 6.20, Clay: 14.05, OM: 2.95 },
+    { county: "Union", pH: 5.70, Clay: 19.85, OM: 2.95 },
+    { county: "Johnson", pH: 5.70, Clay: 19.85, OM: 2.95 },
+    { county: "Williamson", pH: 5.70, Clay: 19.85, OM: 2.95 },
+    { county: "Jefferson", pH: 5.70, Clay: 17.20, OM: 2.95 },
+    { county: "Washington", pH: 5.70, Clay: 17.20, OM: 2.95 },
+    { county: "Clinton", pH: 5.70, Clay: 17.20, OM: 2.95 },
+    { county: "Bond", pH: 5.70, Clay: 17.20, OM: 2.95 },
+    { county: "Madison", pH: 5.70, Clay: 17.20, OM: 2.95 },
+    { county: "Greene", pH: 5.70, Clay: 17.20, OM: 2.95 },
+    { county: "Pike", pH: 6.20, Clay: 14.05, OM: 2.20 },
+    { county: "Morgan", pH: 6.20, Clay: 17.20, OM: 2.95 },
+    { county: "Piatt", pH: 6.20, Clay: 19.85, OM: 3.90 },
+    { county: "Christian", pH: 5.70, Clay: 17.20, OM: 2.95 },
+    { county: "Shelby", pH: 5.70, Clay: 17.20, OM: 2.95 },
+    { county: "Cumberland", pH: 5.70, Clay: 17.20, OM: 2.95 }
+];
+
+const output = document.getElementById("output");
+
+function bestCounty() {
+    output.textContent =
+        "Although McLean County has the best soil\n" +
+        "We only have data for the second best county\n" +
+        "DeKalb pH: 6.20, Clay: 17.20, OM: 3.90";
+}
+
+function findCounty() {
+    const name = document.getElementById("countyInput").value.trim().toLowerCase();
+    const county = data.find(c => c.county.toLowerCase() === name);
+
+    if (!county) {
+        output.textContent = "County not found.";
+        return;
+    }
+
+    output.textContent =
+        `${county.county}\n` +
+        `pH: ${county.pH}\n` +
+        `Clay: ${county.Clay}\n` +
+        `OM: ${county.OM}`;
+}
+
+function findMin(stat) {
+    let min = data[0];
+    data.forEach(c => {
+        if (c[stat] < min[stat]) min = c;
+    });
+    output.textContent =
+        `${min.county} County has the lowest ${stat}: ${min[stat]}`;
+}
+
+function findMax(stat) {
+    let max = data[0];
+    data.forEach(c => {
+        if (c[stat] > max[stat]) max = c;
+    });
+    output.textContent =
+        `${max.county} County has the highest ${stat}: ${max[stat]}`;
+}
+</script>
+
+</body>
+</html>
